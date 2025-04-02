@@ -1,0 +1,4 @@
+include:
+  - project: apps/gitlab/gitlab-ci
+    file: templates/deploy-docker-compose.yml
+    ref: latest
