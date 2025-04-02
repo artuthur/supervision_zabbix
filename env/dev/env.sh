@@ -1,11 +1,11 @@
 #!/bin/bash
 
 export env="dev"
-export dockerhub="dockerhub.forge.acteam-lab.com"
+export dockerhub="dockerhub.forge.x.com"
 export path_volume="/forge/docker"
 export name_app="zabbix"
 export name_dir="zabbix"
-export app_url="${name_app}.${env}.forge.acteam-lab.com"
+export app_url="${name_app}.${env}.x.com"
 export app_servicename="${name_app}-${env}"
 
 # Zabbix Server
