@@ -206,11 +206,7 @@ L'ajout d'un hôte demande de fournir plusieurs informations tel que :
 - **Interfaces** : la **manière** dont le **monitoring va s'effectuer** via un agent, un protocole, etc. Ici on utilise un agent donc on ajoute une entrée via le bouton **Add**, de **Type Agent** puis on lui fournie l'**adresse IP ou le DNS de la machine ou l'agent est installe et que l'on souhaite monitorer** ainsi que le moyen par lequel on souhaite procèder, il est préferable de **laisser le port de l'agent** Zabbix par défaut.
 - **Description** : On peut ajouter une description de notre hôte.   
 
-![add_host_remote_machine](img/add_host_local_machine.png)
-
 L'hôte a bien été ajouté et maintenant nous possèdons les métriques Linux de la machine comme la RAM disponible, l'utilisation du CPU, etc :
-
-![linux_items_from_host](img/linux_items.png)
 
 ---
 
@@ -222,17 +218,12 @@ S'assurer que la version de Zabbix soit **supérieur ou égale** à 6.4...
 
 Via la commande `zabbix-server -V`:
 
-![zabbix_server_version_command](img/zabbix_server_version_command.png)
 
 Via l'interface Web :
-
-![zabbix_server_version_GUI](img/zabbix_server_version_GUI.png)
 
 S'assurer d'avoir l'[agent2](https://hub.docker.com/r/zabbix/zabbix-agent2) afin de pouvoir utiliser la template **Docker by Zabbix agent 2**.
 
 Afin qu'il puisse **découvrir et collecter les métriques** des containers l'agent **a besoin** d'avoir **accès** à la **socket Docker** du swarm. Nous avons donc de ce fait du ajouter un volume pointant sur la socket !
-
-![add_socket_volume_for_agent](img/add_socket_volume_for_agent.png)
 
 Dans le conteneur de l'agent Zabbix, ajouter **les droits** pour l'utilisateur zabbix :
 
@@ -251,11 +242,7 @@ docker exec -u 0 <IDouNOMduContainer> chown zabbix:root /var/run/docker.sock
 
 On ajoute à notre **hôte** crée précedemment, la template `Docker by Zabbix agent2`:
 
-![add_host_swarm_zabbix](img/add_host_swarm_zabbix.png)
-
 Notre hôte est maintenant modifié !
-
-![host_added_zabbix](img/host_added_zabbix.png)
 
 Vérifier qu'il n'y a **pas d'erreur de connexion ou d'accès à la socket pour la découverte des containers** en se rendant :
 
@@ -264,12 +251,7 @@ Data collection > Host > actit-forge-swarm-01 > Discovery
 
 Les **erreurs sont affichés** dans la colonne `Info` tout à droite (à côté de `Statut`) via une icône, on peut afficher le message d'erreur en passant la souris dessus.
 
-![discovery_rule_host_zabbix](img/discovery_rule_host_zabbix.png)
-
 Si tout va bien, les règles de discovery des containers & images sont activées et l'agent va alors chercher et remonter les items (métriques) des containers.
-
-![get_items_from_discovery](img/get_items_from_discovery.png)
-
 
 ### <span style="color:red"> **Problématique** </span>
 
@@ -286,13 +268,7 @@ L'infrastructure fonctionnant en mode Swarm, ce [blog](https://medium.com/@archo
 
 Sélectionne le menu `All dashboards` puis le bouton `Create dashboard` :
 
-![all_dashboard_button](img/all_dashboard_button.png)
-
-![create_dashboard_button](img/create_dashboard_button.png)
-
 Ajouter un **nom** et sélectionner le **propriétaire** du Dashboard :
-
-![create_dashboard_properties](img/create_dashboard_properties.png)
 
 Une fois le dashboard crée, il est possible d'**ajouter des widgets** ou l'on souhaite d'un **simple clic** de souris. 
 
@@ -305,11 +281,7 @@ Par exemple pour afficher un graphique d'utilisation de la mémoire sur notre ma
 - Sélectionner la métrique que vous voulez afficher dans le graphique en sélectionnant la couleur, l'hôte (ici notre mahcine) puis la métrique (ici l'usage de la mémoire)
 - Ajouter le graphique via le boutton `Add`
 
-![add_graph_widget_exemple_machine](img/add_graph_widget_exemple_machine.png)
-
 Voici ce que pourrais donner un dashboard de la Forge :
-
-![dashboard_swarm](img/dashboard_swarm.png)
 
 ---
 
@@ -318,8 +290,6 @@ Voici ce que pourrais donner un dashboard de la Forge :
 Pour le test de la solution, nous avons déployé une stack nextcloud afin de pouvoir la monitorer en y créant un dashboard.
  
 Il suffit de faire **comme le monitoring d'une ressource machine** mais en **recherchant** cette fois ci **le container** que vous souhaitez. 
-
-![add_graph_widget_exemple_docker](img/add_graph_widget_exemple_docker.png)
 
 ---
 
@@ -341,10 +311,6 @@ Une fois installé, si vous êtes passe par la ligne de commande rendez-vous sur
 
 Ensuite dans la section ***Configuration*** puis ***Data Sources***, **ajouter** une nouvelle **`data source`** via le bouton **Add data source**, rechercher et sélectionner votre plugin.
 
-![datasources_sidebarmenu_grafana](img/datasources_sidebarmenu_grafana.png)
-
-![add_data_source_button_grafana](img/add_data_source_button_grafana.png)
-
 Maintenant il va falloir **configurer** votre nouvelle data source, les configurations essentiels sont :
 
 - Connection :
@@ -358,7 +324,6 @@ Le reste est à laisser par défaut.
 
 Vous pouvez maintenant **sauvegarder** et **tester l'appel** de votre API Zabbix via le bouton **Save & Test**, si le test passe au vert avec la version de l'API alors tout fonctionne correctement !
 
-![](img/save_button_and_api_test.png)
 
 ---
 
