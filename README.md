@@ -114,23 +114,17 @@ docker_copy.sh id_container_serveur id_container_web
 
 Afin d'accèder au service sur notre naviguateur nous allons ajouter une entrée DNS pour qu'à l'appel de l'url le serveur puisse nous délivrer le service.
 
-On va sur [l'espace OVH](https://www.ovh.com/manager/#/web/domain/acteam-lab.com/information) puis à la gestion du nom de domaine `acteam-lab.com`.
+On va sur [l'espace OVH]() puis à la gestion du nom de domaine `x.com`.
 
 On sélectionne **la catégorie Zone DNS** puis **Ajouter une entrée**.
 
-![add_DNS_entry_button](img/add_DNS_entry_button.png)
+Dans notre cas le service Zabbix fonctionne sur le swarm avec une IP fixe, On sélectionne donc le **champs de pointage A** (relation nom de domaine/ip).
 
-Dans notre cas le service Zabbix fonctionne sur le swarm avec une IP fixe (85.8.128.37), On sélectionne donc le **champs de pointage A** (relation nom de domaine/ip).
+On ajoute le **nom de sous-domaine** que l'on souhaite pour notre service, par convention les sous domaines sont établis ainsi : ***{nom de l'appli}.{nom de l'environnement}.x.com*** excepte pour les **applications en prod** ou le nom de l'environnement n'est pas nécessaire.
 
-![select_a_type](img/select_a_type.png)
-
-On ajoute le **nom de sous-domaine** que l'on souhaite pour notre service, par convention les sous domaines sont établis ainsi : ***{nom de l'appli}.{nom de l'environnement}.forge.acteam-lab.com*** excepte pour les **applications en prod** ou le nom de l'environnement n'est pas nécessaire.
-
-ici nous somme dans un environnement de dev donc notre sous domaine sera [zabbix.dev.forge.acteam-lab.com](https://zabbix.dev.forge.acteam-lab.com) 
+ici nous somme dans un environnement de dev donc notre sous domaine sera [zabbix.dev.x.com](https://zabbix.dev.x.com) 
 
 Enfin on ajoute l'**adresse IP de la machine** qui fait fonctionner notre service dans l'input **Cible** !
-
-![add_sous_domaine_and_cible](img/add_sous_domaine_and_cible.png)
 
 ---
 
@@ -138,15 +132,13 @@ Enfin on ajoute l'**adresse IP de la machine** qui fait fonctionner notre servic
 
 ### **Configuration de l'agent du serveur**
 
-On accède au service via l'[interface web](https://zabbix.dev.forge.acteam-lab.com/).  
+On accède au service via l'[interface web](https://zabbix.dev.x.com/).  
 
 Dans la section **Current problems**, on clique sur **Zabbix server** puis on sélectionne **Host**  
 
 On modifie le **Host Name** avec le hostname du server dans le docker compose.  
 
 Dans la section interface, on modifie le **DNS Name** pour mettre le hostname de l'agent dans le docker compose puis on sélectionne **DNS** dans l'option **Connect to**
-
-![add_host_zabbix-server](img/add_host_zabbix-server.png)
 
 On peut maintenant cliquer sur **Update** !
 
@@ -176,26 +168,18 @@ On souhaite déployer l'agent Zabbix sur une **machine cliente**, dans notre cas
 Pour palier à ces blocages et aux problèmes de routage nous avons **ajouter** des **règles de routage** et des **règles de filtrage** sur les instances PFsense et sur le Stormshield du CIV :
 
 - Ajout de règle de routage dans le Stormshield.
-![stormsield_routes](img/stormshied_routes.png)
 
 - Ajout de règle de routage dans l'instance PFsense Client.
-![pfsense_NSI_routes](img/pfsense_NSI_routes.png)
 
 - Ajout de règle de routage dans l'instance PFsense Forge.
-![pfsense_forge_routes](img/pfsense_forge_routes.png)
 
 - Ajout de règle de filtrage dans le Stormshield. 
-![stormshield_rules](img/stormshield_rules.png)
 
 - Ajout de règle de filtrage dans l'instance PFsense NSI.
-![pfsense_NSI_rules](img/pfsense_nsi_rules.png)
 
 - Ajout de règle de filtrage dans l'instance PFsense Forge.
-![pfsense_forge_rules](img/pfsense_forge_rules.png)
 
 - Ajout d'un frontend & backend dédié à zabbix (port 10051) sur HaProxy depuis l'instance pfsense de la Forge.
-![haproxy_frontend_zabbix_pfsense_forge](img/haproxy_frontend_zabbix_pfsense_forge.png)
-![haproxy_backend_zabbix_pfsense_forge](img/haproxy_backend_zabbix_pfsense_forge.png)
 
 Enfin lorsque l'on **déploie l'agent** via le script l'**adresse du serveur Zabbix** que vous devez renseigné doit être l'**adresse IP WAN du PFsense de la Forge**.
 
@@ -372,8 +356,6 @@ Maintenant il va falloir **configurer** votre nouvelle data source, les configur
         
 Le reste est à laisser par défaut.
 
-![configure_zabbix_datasource](img/configure_zabbix_datasource.png)
-
 Vous pouvez maintenant **sauvegarder** et **tester l'appel** de votre API Zabbix via le bouton **Save & Test**, si le test passe au vert avec la version de l'API alors tout fonctionne correctement !
 
 ![](img/save_button_and_api_test.png)
@@ -398,8 +380,8 @@ Dans GLPi:
 
 Dans Zabbix > Alerts > Media Types > GLPi :
 
-- glpi_url : https://glpi.forge.acteam-lab.com/glpi/api
-- zabbix_url : https://zabbix.dev.forge.acteam-lab.com/zabbix/api_jsonrpc.php
+- glpi_url : https://glpi.x.com/glpi/api
+- zabbix_url : https://zabbix.x.com/zabbix/api_jsonrpc.php
 - glpi_token (token du user zabbix dans glpi) : 
 - event_source : de 0 à 3
 
